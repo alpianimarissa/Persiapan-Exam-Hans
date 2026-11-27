@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz - Exercise Before Mock Test 1</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- MathJax untuk merender formula matematika dengan rapi dan inline -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Memastikan elemen MathJax inline tetap sejajar dalam satu baris teks */
+        mjx-container[jax="SVG"] {
+            display: inline-flex !important;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 0.15em !important;
+        }
+        mjx-container[jax="SVG"][display="true"] {
+            display: flex !important;
+            justify-content: center;
+            margin: 0.75em 0 !important;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .fade-in {
+            animation: fadeIn 0.25s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight">Exercise Before Mock Test 1</h1>
+                    <p class="text-xs sm:text-sm text-slate-500">Interactive Mathematics Practice & Step-by-Step Solutions</p>
+                </div>
+            </div>
+
+            <!-- Status Penyimpanan Otomatis & Skor -->
+            <div class="flex items-center gap-2 sm:gap-4 ml-auto">
+                <div id="save-indicator" class="flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Auto-Saved (Offline Safe)</span>
+                </div>
+                <div class="bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-xl text-center">
+                    <span class="text-xs text-indigo-600 font-semibold block">Skor Benar</span>
+                    <span id="header-score" class="text-sm sm:text-base font-extrabold text-indigo-900">0 / 53</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        <!-- Identitas Siswa & Tombol Aksi -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div class="flex-grow grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label for="student-name" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Student Name / Nama Siswa</label>
+                    <input type="text" id="student-name" placeholder="Enter your full name..." 
+                        class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                </div>
+                <div>
+                    <label for="student-class" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Class / ID</label>
+                    <input type="text" id="student-class" placeholder="e.g., Grade 9 / Sec 3" 
+                        class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                </div>
+            </div>
+            <div class="flex items-center gap-2 sm:self-end">
+                <button onclick="openSummaryModal()" class="w-full sm:w-auto px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Rekap Nilai
+                </button>
+                <button onclick="openResetModal()" class="px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-sm font-semibold rounded-xl transition" title="Reset All Progress">
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Layout Grid: Kolom Soal (Kiri) & Panel Navigasi (Kanan) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Area Soal Utama (8 Kolom Desktop) -->
+            <div class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-7">
+                <!-- Badge Info Soal -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <span id="q-number-badge" class="bg-indigo-600 text-white text-sm font-bold px-3 py-1 rounded-lg">No. 1(a)</span>
+                        <span id="q-type-badge" class="bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-lg">Multiple Choice</span>
+                    </div>
+                    <span id="q-topic-badge" class="text-xs font-medium text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">1. Exponents and Surds</span>
+                </div>
+
+                <!-- Konten Pertanyaan -->
+                <div id="question-container" class="fade-in">
+                    <div id="question-text" class="text-base sm:text-lg font-medium text-slate-900 leading-relaxed mb-6">
+                        <!-- Soal dirender di sini -->
+                    </div>
+
+                    <!-- Opsi Jawaban -->
+                    <div id="answer-area" class="space-y-3">
+                        <!-- Pilihan jawaban dirender di sini -->
+                    </div>
+
+                    <!-- Umpan Balik Langsung (Benar/Salah + Pembahasan) -->
+                    <div id="feedback-box" class="hidden mt-6 p-4 sm:p-5 rounded-xl border transition-all">
+                        <!-- Feedback dirender di sini -->
+                    </div>
+                </div>
+
+                <!-- Tombol Navigasi Sebelumnya / Selanjutnya -->
+                <div class="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <button id="btn-prev" onclick="prevQuestion()" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm transition flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Sebelumnya
+                    </button>
+
+                    <span id="progress-text" class="text-xs sm:text-sm font-medium text-slate-500">1 dari 53</span>
+
+                    <button id="btn-next" onclick="nextQuestion()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-sm transition flex items-center gap-2">
+                        Selanjutnya
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel Navigasi Nomor Soal (4 Kolom Desktop) -->
+            <div class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="font-bold text-slate-800 text-base">Navigasi Soal (1–10)</h2>
+                    <span id="answered-count" class="text-xs font-semibold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg">0 / 53</span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-100 rounded-full h-2 mb-4 overflow-hidden">
+                    <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+
+                <!-- Legenda Warna -->
+                <div class="grid grid-cols-3 gap-1.5 text-[11px] text-slate-600 mb-4 pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-1">
+                        <span class="w-2.5 h-2.5 rounded bg-emerald-500 inline-block"></span> Benar
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="w-2.5 h-2.5 rounded bg-rose-500 inline-block"></span> Salah
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="w-2.5 h-2.5 rounded border-2 border-indigo-600 bg-white inline-block"></span> Aktif
+                    </div>
+                </div>
+
+                <!-- Container Navigasi Dikelompokkan per Nomor Soal (1 - 10) -->
+                <div id="nav-groups-container" class="space-y-3.5">
+                    <!-- Grup nomor 1-10 dirender JS -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal Konfirmasi Reset -->
+    <div id="reset-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl fade-in">
+            <div class="flex items-center gap-3 text-rose-600 mb-3">
+                <div class="bg-rose-100 p-2 rounded-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Reset Semua Jawaban?</h3>
+            </div>
+            <p class="text-sm text-slate-600 mb-6">Seluruh jawaban yang sudah tersimpan di perangkat ini akan dihapus dan kuis kembali ke soal pertama.</p>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeResetModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50">Batal</button>
+                <button onclick="confirmReset()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm">Ya, Hapus Semua</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Rekap Hasil Kuis -->
+    <div id="summary-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl fade-in max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <h3 class="text-lg font-bold text-slate-900">Rekap Hasil Exercise Before Mock Test 1</h3>
+                <button onclick="closeSummaryModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4 mb-4 border border-slate-200">
+                <p class="text-sm text-slate-600">Student Name: <strong id="summary-name" class="text-slate-900">-</strong></p>
+                <p class="text-sm text-slate-600">Class / ID: <strong id="summary-class" class="text-slate-900">-</strong></p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mb-5 text-center">
+                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl">
+                    <span class="block text-xs font-semibold text-emerald-700">Benar</span>
+                    <span id="summary-correct" class="text-2xl font-extrabold text-emerald-800">0</span>
+                </div>
+                <div class="bg-rose-50 border border-rose-200 p-3 rounded-xl">
+                    <span class="block text-xs font-semibold text-rose-700">Salah</span>
+                    <span id="summary-wrong" class="text-2xl font-extrabold text-rose-800">0</span>
+                </div>
+                <div class="bg-indigo-50 border border-indigo-200 p-3 rounded-xl">
+                    <span class="block text-xs font-semibold text-indigo-700">Skor (%)</span>
+                    <span id="summary-grade" class="text-2xl font-extrabold text-indigo-800">0%</span>
+                </div>
+            </div>
+
+            <p id="summary-unanswered" class="text-xs text-slate-500 text-center mb-5">0 soal belum dijawab.</p>
+
+            <div class="flex justify-end">
+                <button onclick="closeSummaryModal()" class="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl">Tutup & Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // DATA SOAL LENGKAP (NO. 1 - NO. 10, TOTAL 53 SUB-SOAL)
+        // =========================================================================
+        const quizData = [
+            // --- NOMOR 1: Exponents and Surds ---
+            {
+                id: '1a', group: 1, groupTitle: '1. Exponents & Surds', label: '1(a)',
+                question: 'Express $16\\sqrt[3]{4}$ in the form $2^r$. Find the value of $r$.',
+                options: ['$r = \\frac{14}{3}$', '$r = \\frac{10}{3}$', '$r = \\frac{13}{3}$', '$r = 6$'],
+                correctIndex: 0,
+                explanation: '$16\\sqrt[3]{4} = 2^4 \\times (2^2)^{\\frac{1}{3}} = 2^4 \\times 2^{\\frac{2}{3}} = 2^{4 + \\frac{2}{3}} = 2^{\\frac{14}{3}}$. Jadi, $r = \\frac{14}{3}$.'
+            },
+            {
+                id: '1b', group: 1, groupTitle: '1. Exponents & Surds', label: '1(b)',
+                question: 'Express $\\dfrac{32}{\\sqrt{8}}$ in the form $2^r$. Find the value of $r$.',
+                options: ['$r = \\frac{5}{2}$', '$r = \\frac{7}{2}$', '$r = \\frac{13}{2}$', '$r = 2$'],
+                correctIndex: 1,
+                explanation: '$\\dfrac{32}{\\sqrt{8}} = \\dfrac{2^5}{(2^3)^{\\frac{1}{2}}} = \\dfrac{2^5}{2^{\\frac{3}{2}}} = 2^{5 - \\frac{3}{2}} = 2^{\\frac{7}{2}}$. Jadi, $r = \\frac{7}{2}$.'
+            },
+            {
+                id: '1c', group: 1, groupTitle: '1. Exponents & Surds', label: '1(c)',
+                question: 'Express $\\dfrac{8\\sqrt[4]{8}}{4^{\\frac{1}{2}}}$ in the form $2^r$. Find the value of $r$.',
+                options: ['$r = \\frac{15}{4}$', '$r = \\frac{7}{4}$', '$r = \\frac{11}{4}$', '$r = \\frac{9}{4}$'],
+                correctIndex: 2,
+                explanation: '$\\dfrac{8\\sqrt[4]{8}}{4^{\\frac{1}{2}}} = \\dfrac{2^3 \\times (2^3)^{\\frac{1}{4}}}{(2^2)^{\\frac{1}{2}}} = \\dfrac{2^{3 + \\frac{3}{4}}}{2^1} = 2^{\\frac{15}{4} - 1} = 2^{\\frac{11}{4}}$. Jadi, $r = \\frac{11}{4}$.'
+            },
+            {
+                id: '1d', group: 1, groupTitle: '1. Exponents & Surds', label: '1(d)',
+                question: 'Given that $x = 27\\sqrt{3}$, express $x$ in the form $3^k$. Find the value of $k$.',
+                options: ['$k = \\frac{5}{2}$', '$k = \\frac{7}{2}$', '$k = \\frac{9}{2}$', '$k = 4$'],
+                correctIndex: 1,
+                explanation: '$x = 27\\sqrt{3} = 3^3 \\times 3^{\\frac{1}{2}} = 3^{3 + \\frac{1}{2}} = 3^{\\frac{7}{2}}$. Jadi, $k = \\frac{7}{2}$.'
+            },
+            {
+                id: '1e', group: 1, groupTitle: '1. Exponents & Surds', label: '1(e)',
+                question: 'Express $\\dfrac{1}{25}\\sqrt{125}$ in the form $5^n$. Find the value of $n$.',
+                options: ['$n = \\frac{1}{2}$', '$n = -\\frac{3}{2}$', '$n = -\\frac{1}{2}$', '$n = \\frac{7}{2}$'],
+                correctIndex: 2,
+                explanation: '$\\dfrac{1}{25}\\sqrt{125} = 5^{-2} \\times (5^3)^{\\frac{1}{2}} = 5^{-2 + \\frac{3}{2}} = 5^{-\\frac{1}{2}}$. Jadi, $n = -\\frac{1}{2}$.'
+            },
+
+            // --- NOMOR 2: Fractional Indices ---
+            {
+                id: '2a', group: 2, groupTitle: '2. Fractional Indices', label: '2(a)',
+                question: 'It is given that $x = 9p^{\\frac{1}{3}}$ and $y = 3p^{\\frac{1}{6}}$, where $p$ is a positive constant. Find (i) $\\left(\\dfrac{x}{y}\\right)^3$ and (ii) $\\sqrt{xy}$.',
+                options: [
+                    '(i) $27p^{\\frac{1}{2}}$ dan (ii) $3\\sqrt{3}p^{\\frac{1}{4}}$',
+                    '(i) $9p^{\\frac{1}{2}}$ dan (ii) $27p^{\\frac{1}{4}}$',
+                    '(i) $27p^{\\frac{1}{6}}$ dan (ii) $3\\sqrt{3}p^{\\frac{1}{2}}$',
+                    '(i) $3p^{\\frac{1}{2}}$ dan (ii) $9p^{\\frac{1}{4}}$'
+                ],
+                correctIndex: 0,
+                explanation: '(i) $\\left(\\frac{9p^{1/3}}{3p^{1/6}}\\right)^3 = (3p^{1/6})^3 = 27p^{\\frac{1}{2}}$. <br>(ii) $\\sqrt{9p^{1/3} \\times 3p^{1/6}} = (27p^{1/2})^{1/2} = 3\\sqrt{3}p^{\\frac{1}{4}}$.'
+            },
+            {
+                id: '2b', group: 2, groupTitle: '2. Fractional Indices', label: '2(b)',
+                question: 'It is given that $u = 4x^{\\frac{3}{2}}$ and $v = 8x^{\\frac{1}{2}}$, where $x$ is a positive constant. Find (i) $\\left(\\dfrac{u}{v}\\right)^2$ and (ii) $\\sqrt{uv}$.',
+                options: [
+                    '(i) $\\frac{1}{2}x^2$ dan (ii) $4x$',
+                    '(i) $\\frac{1}{4}x^2$ dan (ii) $4\\sqrt{2}x$',
+                    '(i) $4x^2$ dan (ii) $16\\sqrt{2}x$',
+                    '(i) $\\frac{1}{4}x$ dan (ii) $4\\sqrt{2}x^2$'
+                ],
+                correctIndex: 1,
+                explanation: '(i) $\\left(\\frac{4x^{3/2}}{8x^{1/2}}\\right)^2 = \\left(\\frac{1}{2}x\\right)^2 = \\frac{1}{4}x^2$. <br>(ii) $\\sqrt{4x^{3/2} \\times 8x^{1/2}} = \\sqrt{32x^2} = 4\\sqrt{2}x$.'
+            },
+            {
+                id: '2c', group: 2, groupTitle: '2. Fractional Indices', label: '2(c)',
+                question: 'It is given that $a = 5k^{\\frac{2}{3}}$ and $b = 25k^{\\frac{1}{3}}$, where $k$ is a positive constant. Find (i) $\\left(\\dfrac{b}{a}\\right)^3$ and (ii) $ab$.',
+                options: [
+                    '(i) $125k$ dan (ii) $125k^{-1}$',
+                    '(i) $25k^{-1}$ dan (ii) $125k^{\\frac{2}{9}}$',
+                    '(i) $125k^{-1}$ dan (ii) $125k$',
+                    '(i) $5k^{-1}$ dan (ii) $125k$'
+                ],
+                correctIndex: 2,
+                explanation: '(i) $\\left(\\frac{25k^{1/3}}{5k^{2/3}}\\right)^3 = (5k^{-1/3})^3 = 125k^{-1}$. <br>(ii) $ab = 5k^{2/3} \\times 25k^{1/3} = 125k^{1} = 125k$.'
+            },
+            {
+                id: '2d', group: 2, groupTitle: '2. Fractional Indices', label: '2(d)',
+                question: 'It is given that $m = 27y^{\\frac{4}{3}}$ and $n = 3y^{\\frac{2}{3}}$, where $y$ is a positive constant. Find (i) $\\left(\\dfrac{m}{n}\\right)^2$ and (ii) $\\sqrt{mn}$.',
+                options: [
+                    '(i) $81y^{\\frac{4}{3}}$ dan (ii) $9y$',
+                    '(i) $9y^{\\frac{4}{3}}$ dan (ii) $81y$',
+                    '(i) $81y^{\\frac{2}{3}}$ dan (ii) $9y^2$',
+                    '(i) $81y^{\\frac{4}{3}}$ dan (ii) $3\\sqrt{3}y$'
+                ],
+                correctIndex: 0,
+                explanation: '(i) $\\left(\\frac{27y^{4/3}}{3y^{2/3}}\\right)^2 = (9y^{2/3})^2 = 81y^{\\frac{4}{3}}$. <br>(ii) $\\sqrt{27y^{4/3} \\times 3y^{2/3}} = \\sqrt{81y^2} = 9y$.'
+            },
+            {
+                id: '2e', group: 2, groupTitle: '2. Fractional Indices', label: '2(e)',
+                question: 'It is given that $p = 16z^{\\frac{3}{4}}$ and $q = 2z^{\\frac{1}{4}}$, where $z$ is a positive constant. Find (i) $\\left(\\dfrac{p}{q}\\right)^4$ and (ii) $\\dfrac{p}{q^2}$.',
+                options: [
+                    '(i) $64z^2$ dan (ii) $8z^{\\frac{1}{4}}$',
+                    '(i) $4096z^2$ dan (ii) $4z^{\\frac{1}{4}}$',
+                    '(i) $4096z$ dan (ii) $4z^{\\frac{1}{2}}$',
+                    '(i) $512z^2$ dan (ii) $4z^{\\frac{1}{4}}$'
+                ],
+                correctIndex: 1,
+                explanation: '(i) $\\left(\\frac{16z^{3/4}}{2z^{1/4}}\\right)^4 = (8z^{1/2})^4 = 8^4 z^2 = 4096z^2$. <br>(ii) $\\frac{16z^{3/4}}{(2z^{1/4})^2} = \\frac{16z^{3/4}}{4z^{1/2}} = 4z^{\\frac{1}{4}}$.'
+            },
+
+            // --- NOMOR 3: Polynomial Expansion ---
+            {
+                id: '3a', group: 3, groupTitle: '3. Polynomial Expansion', label: '3(a)',
+                question: 'The expression $(x-2)(x^2-4x+5)$ can be written in the form $x^3+px^2+qx-10$ (where $p=-6$). Find the value of $q$.',
+                options: ['$q = 13$', '$q = -3$', '$q = -13$', '$q = 3$'],
+                correctIndex: 0,
+                explanation: '$(x-2)(x^2-4x+5) = x^3 - 4x^2 + 5x - 2x^2 + 8x - 10 = x^3 - 6x^2 + 13x - 10$. Jadi, $q = 13$.'
+            },
+            {
+                id: '3b', group: 3, groupTitle: '3. Polynomial Expansion', label: '3(b)',
+                question: 'The expression $(x+4)(x^2-3x-2)$ can be written in the form $x^3+px^2+qx-8$ (where $p=1$). Find the value of $q$.',
+                options: ['$q = 10$', '$q = -14$', '$q = -10$', '$q = 14$'],
+                correctIndex: 1,
+                explanation: '$(x+4)(x^2-3x-2) = x^3 - 3x^2 - 2x + 4x^2 - 12x - 8 = x^3 + x^2 - 14x - 8$. Jadi, $q = -14$.'
+            },
+            {
+                id: '3c', group: 3, groupTitle: '3. Polynomial Expansion', label: '3(c)',
+                question: 'The expression $(x-5)(x^2+2x-3)$ can be written in the form $x^3+px^2+qx+15$ (where $p=-3$). Find the value of $q$.',
+                options: ['$q = 7$', '$q = -7$', '$q = -13$', '$q = 13$'],
+                correctIndex: 2,
+                explanation: '$(x-5)(x^2+2x-3) = x^3 + 2x^2 - 3x - 5x^2 - 10x + 15 = x^3 - 3x^2 - 13x + 15$. Jadi, $q = -13$.'
+            },
+            {
+                id: '3d', group: 3, groupTitle: '3. Polynomial Expansion', label: '3(d)',
+                question: 'The expression $(2x-1)(x^2+4x-6)$ can be written in the form $2x^3+px^2+qx+6$ (where $p=7$). Find the value of $q$.',
+                options: ['$q = -8$', '$q = -16$', '$q = 16$', '$q = -12$'],
+                correctIndex: 1,
+                explanation: '$(2x-1)(x^2+4x-6) = 2x^3 + 8x^2 - 12x - x^2 - 4x + 6 = 2x^3 + 7x^2 - 16x + 6$. Jadi, $q = -16$.'
+            },
+            {
+                id: '3e', group: 3, groupTitle: '3. Polynomial Expansion', label: '3(e)',
+                question: 'The expression $(3x+2)(x^2-5x+4)$ can be written in the form $3x^3+px^2+qx+8$ (where $p=-13$). Find the value of $q$.',
+                options: ['$q = 22$', '$q = -2$', '$q = 2$', '$q = 12$'],
+                correctIndex: 2,
+                explanation: '$(3x+2)(x^2-5x+4) = 3x^3 - 15x^2 + 12x + 2x^2 - 10x + 8 = 3x^3 - 13x^2 + 2x + 8$. Jadi, $q = 2$.'
+            },
+
+            // --- NOMOR 4: Simplifying Indices & Surds ---
+            {
+                id: '4a', group: 4, groupTitle: '4. Simplifying Expressions', label: '4(a)',
+                question: 'Simplify $\\dfrac{(2x)^4 y^{-3} \\times x^2}{(x^{-2}y)^5} \\times \\sqrt[3]{27x^9y^6}$ in the form $kx^my^n$.',
+                options: ['$48x^{19}y^{-6}$', '$24x^{19}y^{-6}$', '$48x^{-1}y^{-6}$', '$48x^{19}y^{4}$'],
+                correctIndex: 0,
+                explanation: '$\\frac{16x^4 y^{-3} \\cdot x^2}{x^{-10} y^5} \\times 3x^3 y^2 = 16x^{6 - (-10)} y^{-3 - 5} \\times 3x^3 y^2 = 48x^{19}y^{-6}$.'
+            },
+            {
+                id: '4b', group: 4, groupTitle: '4. Simplifying Expressions', label: '4(b)',
+                question: 'Simplify $\\dfrac{(3x)^3 y^{-1} \\times x^4}{(x^{-3}y^2)^4} \\times \\sqrt{81x^8y^{10}}$ in the form $kx^my^n$.',
+                options: ['$81x^{23}y^{-4}$', '$243x^{23}y^{-4}$', '$243x^{-1}y^{-4}$', '$243x^{23}y^{6}$'],
+                correctIndex: 1,
+                explanation: '$\\frac{27x^3 y^{-1} \\cdot x^4}{x^{-12} y^8} \\times 9x^4 y^5 = 27x^{7 - (-12)} y^{-9} \\times 9x^4 y^5 = 243x^{23}y^{-4}$.'
+            },
+            {
+                id: '4c', group: 4, groupTitle: '4. Simplifying Expressions', label: '4(c)',
+                question: 'Simplify $\\dfrac{(4x)^2 y^{-4} \\times x^5}{(x^{-1}y^3)^3} \\times \\sqrt[4]{16x^{16}y^{12}}$ in the form $kx^my^n$.',
+                options: ['$32x^{14}y^{-10}$', '$16x^{14}y^{-10}$', '$32x^{8}y^{-10}$', '$32x^{14}y^{-4}$'],
+                correctIndex: 0,
+                explanation: '$\\frac{16x^2 y^{-4} \\cdot x^5}{x^{-3} y^9} \\times 2x^4 y^3 = 16x^{7 - (-3)} y^{-13} \\times 2x^4 y^3 = 32x^{14}y^{-10}$.'
+            },
+            {
+                id: '4d', group: 4, groupTitle: '4. Simplifying Expressions', label: '4(d)',
+                question: 'Simplify $\\dfrac{(2x)^5 y^{-2} \\times x^3}{(x^{-4}y)^2} \\times \\sqrt[3]{8x^{12}y^9}$ in the form $kx^my^n$.',
+                options: ['$64x^{20}y^{1}$', '$32x^{20}y^{-1}$', '$64x^{20}y^{-1}$', '$64x^{4}y^{-1}$'],
+                correctIndex: 2,
+                explanation: '$\\frac{32x^5 y^{-2} \\cdot x^3}{x^{-8} y^2} \\times 2x^4 y^3 = 32x^{8 - (-8)} y^{-4} \\times 2x^4 y^3 = 64x^{20}y^{-1}$.'
+            },
+            {
+                id: '4e', group: 4, groupTitle: '4. Simplifying Expressions', label: '4(e)',
+                question: 'Simplify $\\dfrac{(3x)^2 y^{-5} \\times x^6}{(x^{-2}y^2)^3} \\times \\sqrt{100x^{10}y^6}$ in the form $kx^my^n$.',
+                options: ['$90x^{19}y^{-8}$', '$30x^{19}y^{-8}$', '$90x^{7}y^{-8}$', '$90x^{19}y^{-2}$'],
+                correctIndex: 0,
+                explanation: '$\\frac{9x^2 y^{-5} \\cdot x^6}{x^{-6} y^6} \\times 10x^5 y^3 = 9x^{8 - (-6)} y^{-11} \\times 10x^5 y^3 = 90x^{19}y^{-8}$.'
+            },
+
+            // --- NOMOR 5: Rationalising Denominator ---
+            {
+                id: '5a', group: 5, groupTitle: '5. Rationalising Surds', label: '5(a)',
+                question: 'Express $\\dfrac{5-2\\sqrt{3}}{2-\\sqrt{3}}$ in the form $m+\\sqrt{n}$, where $m$ and $n$ are integers.',
+                options: ['$4 + \\sqrt{3}$', '$16 + \\sqrt{3}$', '$4 - \\sqrt{3}$', '$2 + \\sqrt{3}$'],
+                correctIndex: 0,
+                explanation: '$\\frac{5-2\\sqrt{3}}{2-\\sqrt{3}} \\times \\frac{2+\\sqrt{3}}{2+\\sqrt{3}} = \\frac{10 + 5\\sqrt{3} - 4\\sqrt{3} - 6}{4 - 3} = 4 + \\sqrt{3}$.'
+            },
+            {
+                id: '5b', group: 5, groupTitle: '5. Rationalising Surds', label: '5(b)',
+                question: 'Rationalise and simplify $\\dfrac{6+\\sqrt{5}}{2+\\sqrt{5}}$.',
+                options: ['$-7 + 4\\sqrt{5}$', '$7 - 4\\sqrt{5}$', '$-7 - 4\\sqrt{5}$', '$17 - 4\\sqrt{5}$'],
+                correctIndex: 0,
+                explanation: '$\\frac{6+\\sqrt{5}}{2+\\sqrt{5}} \\times \\frac{2-\\sqrt{5}}{2-\\sqrt{5}} = \\frac{12 - 6\\sqrt{5} + 2\\sqrt{5} - 5}{4 - 5} = \\frac{7 - 4\\sqrt{5}}{-1} = -7 + 4\\sqrt{5}$ (atau $-7 + \\sqrt{80}$).'
+            },
+            {
+                id: '5c', group: 5, groupTitle: '5. Rationalising Surds', label: '5(c)',
+                question: 'Rationalise and simplify $\\dfrac{3+2\\sqrt{6}}{\\sqrt{6}-2}$.',
+                options: ['$9 + \\frac{7}{2}\\sqrt{6}$', '$18 + 7\\sqrt{6}$', '$9 - \\frac{7}{2}\\sqrt{6}$', '$6 + 7\\sqrt{6}$'],
+                correctIndex: 0,
+                explanation: '$\\frac{3+2\\sqrt{6}}{\\sqrt{6}-2} \\times \\frac{\\sqrt{6}+2}{\\sqrt{6}+2} = \\frac{3\\sqrt{6} + 6 + 12 + 4\\sqrt{6}}{6 - 4} = \\frac{18 + 7\\sqrt{6}}{2} = 9 + \\frac{7}{2}\\sqrt{6}$.'
+            },
+            {
+                id: '5d', group: 5, groupTitle: '5. Rationalising Surds', label: '5(d)',
+                question: 'Express $\\dfrac{10-3\\sqrt{5}}{\\sqrt{5}-2}$ in the form $m+\\sqrt{n}$, where $m$ and $n$ are integers.',
+                options: ['$5 + \\sqrt{20}$', '$5 + \\sqrt{80}$', '$35 + \\sqrt{80}$', '$5 - \\sqrt{80}$'],
+                correctIndex: 1,
+                explanation: '$\\frac{10-3\\sqrt{5}}{\\sqrt{5}-2} \\times \\frac{\\sqrt{5}+2}{\\sqrt{5}+2} = \\frac{10\\sqrt{5} + 20 - 15 - 6\\sqrt{5}}{5 - 4} = 5 + 4\\sqrt{5} = 5 + \\sqrt{80}$.'
+            },
+
+            // --- NOMOR 6: Factorising Polynomials (10 sub-soal) ---
+            {
+                id: '6a', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(a)',
+                question: 'Indicate whether the polynomial $x^2 - 9px + 20p^2$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 0,
+                explanation: '$x^2 - 9px + 20p^2 = (x - 4p)(x - 5p)$, sehingga <strong>can be factorised</strong>.'
+            },
+            {
+                id: '6b', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(b)',
+                question: 'Indicate whether the polynomial $3x^2 - 10px + 3p^2$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 0,
+                explanation: '$3x^2 - 10px + 3p^2 = (3x - p)(x - 3p)$, sehingga <strong>can be factorised</strong>.'
+            },
+            {
+                id: '6c', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(c)',
+                question: 'Indicate whether the polynomial $2x^2 - 5x - 3$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 0,
+                explanation: '$2x^2 - 5x - 3 = (2x + 1)(x - 3)$, sehingga <strong>can be factorised</strong>.'
+            },
+            {
+                id: '6d', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(d)',
+                question: 'Indicate whether the polynomial $a^2 + 2a + 5$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 1,
+                explanation: 'Diskriminan $D = 2^2 - 4(1)(5) = -16 < 0$, sehingga <strong>cannot be factorised</strong>.'
+            },
+            {
+                id: '6e', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(e)',
+                question: 'Indicate whether the polynomial $x^2 + 4x + 6$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 1,
+                explanation: 'Diskriminan $D = 4^2 - 4(1)(6) = -8 < 0$, sehingga <strong>cannot be factorised</strong>.'
+            },
+            {
+                id: '6f', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(f)',
+                question: 'Indicate whether the polynomial $4x^2 - 12px + 9p^2$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 0,
+                explanation: '$4x^2 - 12px + 9p^2 = (2x - 3p)^2$, sehingga <strong>can be factorised</strong>.'
+            },
+            {
+                id: '6g', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(g)',
+                question: 'Indicate whether the polynomial $5x^2 + 13x - 6$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 0,
+                explanation: '$5x^2 + 13x - 6 = (5x - 2)(x + 3)$, sehingga <strong>can be factorised</strong>.'
+            },
+            {
+                id: '6h', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(h)',
+                question: 'Indicate whether the polynomial $b^2 - 4b + 7$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 1,
+                explanation: 'Diskriminan $D = (-4)^2 - 4(1)(7) = -12 < 0$, sehingga <strong>cannot be factorised</strong>.'
+            },
+            {
+                id: '6i', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(i)',
+                question: 'Indicate whether the polynomial $x^2 - 7px + 12p^2$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 0,
+                explanation: '$x^2 - 7px + 12p^2 = (x - 3p)(x - 4p)$, sehingga <strong>can be factorised</strong>.'
+            },
+            {
+                id: '6j', group: 6, groupTitle: '6. Factorising Quadratics', label: '6(j)',
+                question: 'Indicate whether the polynomial $2x^2 + 7x + 5$ can be factorised (over integers):',
+                options: ['Can be factorised', 'Cannot be factorised'],
+                correctIndex: 0,
+                explanation: '$2x^2 + 7x + 5 = (2x + 5)(x + 1)$, sehingga <strong>can be factorised</strong>.'
+            },
+
+            // --- NOMOR 7: Nature of Roots ---
+            {
+                id: '7a', group: 7, groupTitle: '7. Nature of Roots', label: '7(a)',
+                question: 'Determine the nature of the roots of the equation $2x^2 - 7x + 9 = 0$.',
+                options: [
+                    'No real roots ($D < 0$)',
+                    'Two distinct real roots ($D > 0$)',
+                    'Real and equal roots ($D = 0$)',
+                    'One real root and one imaginary root'
+                ],
+                correctIndex: 0,
+                explanation: '$D = b^2 - 4ac = (-7)^2 - 4(2)(9) = 49 - 72 = -23 < 0$. Karena $D < 0$, persamaan tidak memiliki akar real (<em>no real roots</em>).'
+            },
+            {
+                id: '7b', group: 7, groupTitle: '7. Nature of Roots', label: '7(b)',
+                question: 'Determine the nature of the roots of the quadratic equation $4x^2 - 12x + 9 = 0$.',
+                options: [
+                    'No real roots ($D < 0$)',
+                    'Two distinct real roots ($D > 0$)',
+                    'Real and equal roots ($D = 0$)',
+                    'Irrational distinct roots'
+                ],
+                correctIndex: 2,
+                explanation: '$D = (-12)^2 - 4(4)(9) = 144 - 144 = 0$. Karena $D = 0$, persamaan memiliki dua akar real yang sama/kembar (<em>real and equal roots</em>).'
+            },
+            {
+                id: '7c', group: 7, groupTitle: '7. Nature of Roots', label: '7(c)',
+                question: 'Determine the nature of the roots of the equation $5x^2 - 8x + 4 = 0$.',
+                options: [
+                    'Two distinct real roots ($D > 0$)',
+                    'No real roots ($D < 0$)',
+                    'Real and equal roots ($D = 0$)',
+                    'Rational roots'
+                ],
+                correctIndex: 1,
+                explanation: '$D = (-8)^2 - 4(5)(4) = 64 - 80 = -16 < 0$. Karena $D < 0$, persamaan tidak memiliki akar real (<em>no real roots</em>).'
+            },
+            {
+                id: '7d', group: 7, groupTitle: '7. Nature of Roots', label: '7(d)',
+                question: 'Determine the nature of the roots of the equation $b^2 - 4b + 7 = 0$.',
+                options: [
+                    'Real and equal roots ($D = 0$)',
+                    'Two distinct real roots ($D > 0$)',
+                    'No real roots ($D < 0$)',
+                    'Integer roots'
+                ],
+                correctIndex: 2,
+                explanation: '$D = (-4)^2 - 4(1)(7) = 16 - 28 = -12 < 0$. Karena $D < 0$, persamaan tidak memiliki akar real (<em>no real roots</em>).'
+            },
+
+            // --- NOMOR 8: Equal Real Roots ---
+            {
+                id: '8a', group: 8, groupTitle: '8. Equal Real Roots', label: '8(a)',
+                question: 'Find the values of $k$ for which the equation $(k+2)x^2 - 2kx + 2 = 0$ has equal real roots.',
+                options: ['$k = 1 \\pm \\sqrt{5}$', '$k = -1 \\pm \\sqrt{5}$', '$k = 2 \\pm \\sqrt{5}$', '$k = 1 \\pm \\sqrt{3}$'],
+                correctIndex: 0,
+                explanation: '$D = (-2k)^2 - 4(k+2)(2) = 0 \\Rightarrow 4k^2 - 8k - 16 = 0 \\Rightarrow k^2 - 2k - 4 = 0$. Dengan rumus kuadratik diperoleh $k = \\frac{2 \\pm \\sqrt{20}}{2} = 1 \\pm \\sqrt{5}$.'
+            },
+            {
+                id: '8b', group: 8, groupTitle: '8. Equal Real Roots', label: '8(b)',
+                question: 'Find the value of $m$ for which the quadratic equation $mx^2 - 2(m-1)x + (m+1) = 0$ has real and equal roots.',
+                options: ['$m = 3$', '$m = -\\frac{1}{3}$', '$m = \\frac{1}{3}$', '$m = \\frac{1}{2}$'],
+                correctIndex: 2,
+                explanation: '$D = [-2(m-1)]^2 - 4(m)(m+1) = 0 \\Rightarrow 4(m^2 - 2m + 1) - 4m^2 - 4m = 0 \\Rightarrow -12m + 4 = 0 \\Rightarrow m = \\frac{1}{3}$.'
+            },
+            {
+                id: '8c', group: 8, groupTitle: '8. Equal Real Roots', label: '8(c)',
+                question: 'Find the values of $a$ for which the equation $(2a-1)x^2 - 6ax + (5a+1) = 0$ has equal real roots, given $2a-1 \\neq 0$.',
+                options: [
+                    '$a = \\frac{3 \\pm \\sqrt{5}}{2}$',
+                    '$a = \\frac{3 \\pm \\sqrt{13}}{2}$',
+                    '$a = \\frac{-3 \\pm \\sqrt{13}}{2}$',
+                    '$a = 3 \\pm \\sqrt{13}$'
+                ],
+                correctIndex: 1,
+                explanation: '$D = (-6a)^2 - 4(2a-1)(5a+1) = 0 \\Rightarrow 36a^2 - 4(10a^2 - 3a - 1) = 0 \\Rightarrow -4a^2 + 12a + 4 = 0 \\Rightarrow a^2 - 3a - 1 = 0 \\Rightarrow a = \\frac{3 \\pm \\sqrt{13}}{2}$.'
+            },
+            {
+                id: '8d', group: 8, groupTitle: '8. Equal Real Roots', label: '8(d)',
+                question: 'Find the values of $k$ such that the equation $kx^2 - 5x + k = 0$ has real and equal roots.',
+                options: ['$k = \\pm \\frac{2}{5}$', '$k = \\frac{5}{2}$', '$k = \\pm \\frac{5}{2}$', '$k = \\pm \\frac{25}{4}$'],
+                correctIndex: 2,
+                explanation: '$D = (-5)^2 - 4(k)(k) = 0 \\Rightarrow 25 - 4k^2 = 0 \\Rightarrow k^2 = \\frac{25}{4} \\Rightarrow k = \\pm \\frac{5}{2}$.'
+            },
+            {
+                id: '8e', group: 8, groupTitle: '8. Equal Real Roots', label: '8(e)',
+                question: 'Find the value of $p$ for which the quadratic equation $(p+3)x^2 - 2(p+3)x + 4 = 0$ has equal real roots.',
+                options: ['$p = 1$ atau $p = -3$', '$p = 1$', '$p = -3$', '$p = -1$'],
+                correctIndex: 1,
+                explanation: '$D = [-2(p+3)]^2 - 4(p+3)(4) = 0 \\Rightarrow 4(p+3)(p-1) = 0$. Karena persamaan kuadrat mensyaratkan $p+3 \\neq 0$, maka satu-satunya nilai yang memenuhi adalah $p = 1$.'
+            },
+
+            // --- NOMOR 9: Completing the Square ---
+            {
+                id: '9a', group: 9, groupTitle: '9. Completing the Square', label: '9(a)',
+                question: 'Express $x^2 - 6x + 11$ in the form $(x+a)^2 + b$, where $a$ and $b$ are constants.',
+                options: ['$(x - 3)^2 + 2$', '$(x - 3)^2 + 20$', '$(x + 3)^2 + 2$', '$(x - 6)^2 + 11$'],
+                correctIndex: 0,
+                explanation: '$x^2 - 6x + 11 = (x - 3)^2 - 9 + 11 = (x - 3)^2 + 2$ ($a = -3, b = 2$).'
+            },
+            {
+                id: '9b', group: 9, groupTitle: '9. Completing the Square', label: '9(b)',
+                question: 'Write the quadratic expression $x^2 + 8x - 3$ in the form $(x+p)^2 + q$.',
+                options: ['$(x + 4)^2 + 13$', '$(x + 4)^2 - 19$', '$(x - 4)^2 - 19$', '$(x + 8)^2 - 3$'],
+                correctIndex: 1,
+                explanation: '$x^2 + 8x - 3 = (x + 4)^2 - 16 - 3 = (x + 4)^2 - 19$ ($p = 4, q = -19$).'
+            },
+            {
+                id: '9c', group: 9, groupTitle: '9. Completing the Square', label: '9(c)',
+                question: 'Express $x^2 + 5x + 2$ in the form $(x+a)^2 + b$.',
+                options: [
+                    '$\\left(x + \\frac{5}{2}\\right)^2 + \\frac{17}{4}$',
+                    '$\\left(x + \\frac{5}{2}\\right)^2 - \\frac{17}{4}$',
+                    '$\\left(x - \\frac{5}{2}\\right)^2 - \\frac{17}{4}$',
+                    '$\\left(x + \\frac{5}{2}\\right)^2 - \\frac{33}{4}$'
+                ],
+                correctIndex: 1,
+                explanation: '$x^2 + 5x + 2 = \\left(x + \\frac{5}{2}\\right)^2 - \\frac{25}{4} + 2 = \\left(x + \\frac{5}{2}\\right)^2 - \\frac{17}{4}$.'
+            },
+            {
+                id: '9d', group: 9, groupTitle: '9. Completing the Square', label: '9(d)',
+                question: 'Express $2x^2 - 4x + 7$ in the form $a(x+p)^2 + q$, where $a$, $p$, and $q$ are constants.',
+                options: ['$2(x - 1)^2 + 5$', '$2(x - 1)^2 + 6$', '$2(x - 2)^2 + 3$', '$2(x + 1)^2 + 5$'],
+                correctIndex: 0,
+                explanation: '$2x^2 - 4x + 7 = 2(x^2 - 2x) + 7 = 2[(x - 1)^2 - 1] + 7 = 2(x - 1)^2 + 5$.'
+            },
+            {
+                id: '9e', group: 9, groupTitle: '9. Completing the Square', label: '9(e)',
+                question: 'Find the constants $m$ and $n$ such that $x^2 - 10x + 28 = (x-m)^2 + n$.',
+                options: ['$m = 5, n = 3$', '$m = -5, n = 3$', '$m = 5, n = 53$', '$m = 10, n = 28$'],
+                correctIndex: 0,
+                explanation: '$x^2 - 10x + 28 = (x - 5)^2 - 25 + 28 = (x - 5)^2 + 3$. Jadi, $m = 5$ dan $n = 3$.'
+            },
+
+            // --- NOMOR 10: Simultaneous Equations ---
+            {
+                id: '10a', group: 10, groupTitle: '10. Simultaneous Equations', label: '10(a)',
+                question: 'Solve the simultaneous equations: $xy = 6$ and $x + y = 5$.',
+                options: [
+                    '$(2, 3)$ and $(3, 2)$',
+                    '$(-2, -3)$ and $(-3, -2)$',
+                    '$(1, 6)$ and $(6, 1)$',
+                    '$(2, 3)$ and $(-2, -3)$'
+                ],
+                correctIndex: 0,
+                explanation: 'Substitusi $y = 5 - x$ ke $xy = 6 \\Rightarrow x(5-x) = 6 \\Rightarrow x^2 - 5x + 6 = 0 \\Rightarrow (x-2)(x-3) = 0$. Diperoleh solusi $(2, 3)$ dan $(3, 2)$.'
+            },
+            {
+                id: '10b', group: 10, groupTitle: '10. Simultaneous Equations', label: '10(b)',
+                question: 'Find the solutions to the simultaneous equations: $x^2 + y^2 = 13$ and $x - y = 1$.',
+                options: [
+                    '$(2, 3)$ and $(-3, -2)$',
+                    '$(-2, -3)$ and $(3, 2)$',
+                    '$(3, -2)$ and $(-2, 3)$',
+                    '$(2, -3)$ and $(-3, 2)$'
+                ],
+                correctIndex: 1,
+                explanation: 'Substitusi $x = y + 1$ ke $x^2 + y^2 = 13 \\Rightarrow (y+1)^2 + y^2 = 13 \\Rightarrow 2y^2 + 2y - 12 = 0 \\Rightarrow (y+3)(y-2) = 0$. Diperoleh $(-2, -3)$ dan $(3, 2)$.'
+            },
+            {
+                id: '10c', group: 10, groupTitle: '10. Simultaneous Equations', label: '10(c)',
+                question: 'Solve the simultaneous equations: $y = x^2 - 4x + 5$ and $y - x = 1$.',
+                options: [
+                    '$(1, 2)$ and $(4, 5)$',
+                    '$(-1, 0)$ and $(-4, -3)$',
+                    '$(1, 0)$ and $(4, 3)$',
+                    '$(2, 3)$ and $(3, 4)$'
+                ],
+                correctIndex: 0,
+                explanation: 'Samakan $y = x + 1$ dengan $y = x^2 - 4x + 5 \\Rightarrow x^2 - 5x + 4 = 0 \\Rightarrow (x-1)(x-4) = 0$. Diperoleh $(1, 2)$ dan $(4, 5)$.'
+            },
+            {
+                id: '10d', group: 10, groupTitle: '10. Simultaneous Equations', label: '10(d)',
+                question: 'Solve the simultaneous equations: $xy = -8$ and $2x - y = 10$.',
+                options: [
+                    '$(1, -8)$ and $(4, -2)$',
+                    '$(-1, 8)$ and $(-4, 2)$',
+                    '$(2, -4)$ and $(4, -2)$',
+                    '$(1, 8)$ and $(4, 2)$'
+                ],
+                correctIndex: 0,
+                explanation: 'Substitusi $y = 2x - 10$ ke $xy = -8 \\Rightarrow x(2x - 10) = -8 \\Rightarrow 2x^2 - 10x + 8 = 0 \\Rightarrow (x-1)(x-4) = 0$. Diperoleh $(1, -8)$ dan $(4, -2)$.'
+            },
+            {
+                id: '10e', group: 10, groupTitle: '10. Simultaneous Equations', label: '10(e)',
+                question: 'Find the real values of $x$ and $y$ that satisfy: $x^2 + xy = 12$ and $x + 2y = 7$.',
+                options: [
+                    '$y = \\frac{21 \\pm \\sqrt{145}}{4}$ and $x = \\frac{-7 \\mp \\sqrt{145}}{2}$',
+                    '$y = \\frac{21 \\pm \\sqrt{145}}{2}$ and $x = \\frac{-7 \\mp \\sqrt{145}}{4}$',
+                    '$y = \\frac{-21 \\pm \\sqrt{145}}{4}$ and $x = \\frac{7 \\mp \\sqrt{145}}{2}$',
+                    '$x = 3, y = 2$ and $x = -4, y = \\frac{11}{2}$'
+                ],
+                correctIndex: 0,
+                explanation: 'Substitusi $x = 7 - 2y$ ke $x^2 + xy = 12 \\Rightarrow (7-2y)^2 + (7-2y)y = 12 \\Rightarrow 2y^2 - 21y + 37 = 0$. Dengan rumus kuadratik diperoleh $y = \\frac{21 \\pm \\sqrt{145}}{4}$ dan $x = 7 - 2y = \\frac{-7 \\mp \\sqrt{145}}{2}$.'
+            }
+        ];
+
+        // =========================================================================
+        // STATE & LOCAL STORAGE (OFFLINE & RELOAD SAFE)
+        // =========================================================================
+        const STORAGE_KEY = 'quiz_exercise_mock_test_1_v1';
+
+        let appState = {
+            studentName: '',
+            studentClass: '',
+            currentIndex: 0,
+            answers: {} // { questionId: selectedIndex }
+        };
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    appState = { ...appState, ...parsed };
+                }
+            } catch (e) {
+                console.error('Gagal memuat state dari localStorage:', e);
+            }
+            document.getElementById('student-name').value = appState.studentName || '';
+            document.getElementById('student-class').value = appState.studentClass || '';
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+                const indicator = document.getElementById('save-indicator');
+                const now = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                indicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Tersimpan (${now})</span>`;
+            } catch (e) {
+                console.error('Gagal menyimpan ke localStorage:', e);
+            }
+        }
+
+        document.getElementById('student-name').addEventListener('input', (e) => {
+            appState.studentName = e.target.value;
+            saveState();
+        });
+        document.getElementById('student-class').addEventListener('input', (e) => {
+            appState.studentClass = e.target.value;
+            saveState();
+        });
+
+        // =========================================================================
+        // RENDERING SOAL & UMPAN BALIK LANGSUNG
+        // =========================================================================
+        function renderQuestion() {
+            const q = quizData[appState.currentIndex];
+            const selectedIdx = appState.answers[q.id];
+
+            // Update Badge Header
+            document.getElementById('q-number-badge').textContent = `Soal ${q.label}`;
+            document.getElementById('q-topic-badge').textContent = q.groupTitle;
+
+            // Trigger animasi halus
+            const qContainer = document.getElementById('question-container');
+            qContainer.classList.remove('fade-in');
+            void qContainer.offsetWidth;
+            qContainer.classList.add('fade-in');
+
+            // Render Teks Soal
+            document.getElementById('question-text').innerHTML = q.question;
+
+            const answerArea = document.getElementById('answer-area');
+            const feedbackBox = document.getElementById('feedback-box');
+            answerArea.innerHTML = '';
+            feedbackBox.classList.add('hidden');
+            feedbackBox.innerHTML = '';
+
+            const optionLetters = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+
+                let btnStyle = 'border-slate-200 bg-white hover:bg-indigo-50/60 hover:border-indigo-300 text-slate-800';
+                let badgeStyle = 'bg-slate-100 text-slate-700';
+                let statusIcon = '';
+
+                if (selectedIdx !== undefined) {
+                    const isSelected = selectedIdx === idx;
+                    const isCorrect = q.correctIndex === idx;
+
+                    if (isCorrect) {
+                        btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-950 ring-1 ring-emerald-500';
+                        badgeStyle = 'bg-emerald-600 text-white';
+                        statusIcon = `<span class="ml-auto text-emerald-600 font-bold text-sm shrink-0">✓ Benar</span>`;
+                    } else if (isSelected && !isCorrect) {
+                        btnStyle = 'border-rose-500 bg-rose-50 text-rose-950 ring-1 ring-rose-500';
+                        badgeStyle = 'bg-rose-600 text-white';
+                        statusIcon = `<span class="ml-auto text-rose-600 font-bold text-sm shrink-0">✕ Pilihanmu</span>`;
+                    } else {
+                        btnStyle = 'border-slate-200 bg-slate-50/60 text-slate-500 opacity-75';
+                    }
+                }
+
+                btn.className = `w-full text-left p-3.5 sm:p-4 rounded-xl border-2 transition-all flex items-center gap-3.5 ${btnStyle}`;
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 ${badgeStyle}">${optionLetters[idx]}</span>
+                    <span class="text-sm sm:text-base font-medium leading-snug">${opt}</span>
+                    ${statusIcon}
+                `;
+
+                btn.onclick = () => selectAnswer(q.id, idx);
+                answerArea.appendChild(btn);
+            });
+
+            // Tampilkan Umpan Balik & Pembahasan Langsung
+            if (selectedIdx !== undefined) {
+                const isUserCorrect = selectedIdx === q.correctIndex;
+                feedbackBox.classList.remove('hidden');
+
+                if (isUserCorrect) {
+                    feedbackBox.className = 'mt-6 p-4 sm:p-5 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-950 fade-in';
+                    feedbackBox.innerHTML = `
+                        <div class="flex items-center gap-2 font-bold text-emerald-800 mb-2">
+                            <span class="bg-emerald-600 text-white w-5 h-5 rounded-full inline-flex items-center justify-center text-xs">✓</span>
+                            Jawaban Benar!
+                        </div>
+                        <div class="text-sm leading-relaxed text-emerald-900">
+                            <strong>Penjelasan:</strong><br>${q.explanation}
+                        </div>
+                    `;
+                } else {
+                    const correctLetter = optionLetters[q.correctIndex];
+                    feedbackBox.className = 'mt-6 p-4 sm:p-5 rounded-xl border border-rose-200 bg-rose-50 text-rose-950 fade-in';
+                    feedbackBox.innerHTML = `
+                        <div class="flex items-center gap-2 font-bold text-rose-800 mb-2">
+                            <span class="bg-rose-600 text-white w-5 h-5 rounded-full inline-flex items-center justify-center text-xs">✕</span>
+                            Kurang Tepat! Jawaban yang benar adalah opsi ${correctLetter}.
+                        </div>
+                        <div class="text-sm leading-relaxed text-rose-900">
+                            <strong>Penjelasan:</strong><br>${q.explanation}
+                        </div>
+                    `;
+                }
+            }
+
+            // Tombol Navigasi Prev / Next
+            document.getElementById('btn-prev').disabled = appState.currentIndex === 0;
+            const nextBtn = document.getElementById('btn-next');
+            if (appState.currentIndex === quizData.length - 1) {
+                nextBtn.innerHTML = `Selesai & Rekap ✓`;
+                nextBtn.className = 'px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm transition flex items-center gap-2';
+            } else {
+                nextBtn.innerHTML = `Selanjutnya <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>`;
+                nextBtn.className = 'px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-sm transition flex items-center gap-2';
+            }
+
+            document.getElementById('progress-text').textContent = `${appState.currentIndex + 1} dari ${quizData.length}`;
+
+            // Render MathJax
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([document.getElementById('question-container')]).catch((err) => console.log(err));
+            }
+        }
+
+        function selectAnswer(questionId, optionIndex) {
+            appState.answers[questionId] = optionIndex;
+            saveState();
+            renderQuestion();
+            updateStatsAndNav();
+        }
+
+        // =========================================================================
+        // NAVIGASI GRUP NOMOR (1 - 10) & STATISTIK SKOR
+        // =========================================================================
+        function updateStatsAndNav() {
+            const container = document.getElementById('nav-groups-container');
+            container.innerHTML = '';
+
+            let correctCount = 0;
+            let answeredCount = 0;
+
+            // Kelompokkan soal berdasarkan group (1 s.d. 10)
+            const groups = {};
+            quizData.forEach((q, idx) => {
+                if (!groups[q.group]) {
+                    groups[q.group] = { title: q.groupTitle, items: [] };
+                }
+                groups[q.group].items.push({ ...q, globalIndex: idx });
+            });
+
+            Object.keys(groups).forEach((groupKey) => {
+                const grp = groups[groupKey];
+                const groupDiv = document.createElement('div');
+                
+                const titleEl = document.createElement('p');
+                titleEl.className = 'text-xs font-bold text-slate-600 mb-1.5';
+                titleEl.textContent = grp.title;
+                groupDiv.appendChild(titleEl);
+
+                const gridEl = document.createElement('div');
+                gridEl.className = 'grid grid-cols-5 gap-1.5';
+
+                grp.items.forEach((item) => {
+                    const ans = appState.answers[item.id];
+                    const isCurrent = item.globalIndex === appState.currentIndex;
+
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.textContent = item.label;
+                    btn.onclick = () => {
+                        appState.currentIndex = item.globalIndex;
+                        saveState();
+                        renderQuestion();
+                        updateStatsAndNav();
+                    };
+
+                    let colorClass = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
+                    if (ans !== undefined) {
+                        answeredCount++;
+                        if (ans === item.correctIndex) {
+                            correctCount++;
+                            colorClass = 'bg-emerald-500 text-white hover:bg-emerald-600';
+                        } else {
+                            colorClass = 'bg-rose-500 text-white hover:bg-rose-600';
+                        }
+                    }
+
+                    if (isCurrent) {
+                        colorClass += ' ring-2 ring-offset-1 ring-indigo-600 font-extrabold';
+                    }
+
+                    btn.className = `h-8 rounded-lg text-xs font-semibold transition flex items-center justify-center ${colorClass}`;
+                    gridEl.appendChild(btn);
+                });
+
+                groupDiv.appendChild(gridEl);
+                container.appendChild(groupDiv);
+            });
+
+            // Update Skor Header & Progress Bar
+            document.getElementById('header-score').textContent = `${correctCount} / ${quizData.length}`;
+            document.getElementById('answered-count').textContent = `${answeredCount} / ${quizData.length}`;
+            const pct = Math.round((answeredCount / quizData.length) * 100);
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+        }
+
+        function prevQuestion() {
+            if (appState.currentIndex > 0) {
+                appState.currentIndex--;
+                saveState();
+                renderQuestion();
+                updateStatsAndNav();
+            }
+        }
+
+        function nextQuestion() {
+            if (appState.currentIndex < quizData.length - 1) {
+                appState.currentIndex++;
+                saveState();
+                renderQuestion();
+                updateStatsAndNav();
+            } else {
+                openSummaryModal();
+            }
+        }
+
+        // =========================================================================
+        // MODAL RESET & MODAL REKAP HASIL
+        // =========================================================================
+        function openResetModal() {
+            const modal = document.getElementById('reset-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeResetModal() {
+            const modal = document.getElementById('reset-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function confirmReset() {
+            localStorage.removeItem(STORAGE_KEY);
+            appState = {
+                studentName: '',
+                studentClass: '',
+                currentIndex: 0,
+                answers: {}
+            };
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-class').value = '';
+            closeResetModal();
+            renderQuestion();
+            updateStatsAndNav();
+        }
+
+        function openSummaryModal() {
+            let correct = 0;
+            let wrong = 0;
+            let unanswered = 0;
+
+            quizData.forEach((q) => {
+                const ans = appState.answers[q.id];
+                if (ans === undefined) {
+                    unanswered++;
+                } else if (ans === q.correctIndex) {
+                    correct++;
+                } else {
+                    wrong++;
+                }
+            });
+
+            const pct = Math.round((correct / quizData.length) * 100);
+
+            document.getElementById('summary-name').textContent = appState.studentName.trim() || '(Belum diisi)';
+            document.getElementById('summary-class').textContent = appState.studentClass.trim() || '(Belum diisi)';
+            document.getElementById('summary-correct').textContent = correct;
+            document.getElementById('summary-wrong').textContent = wrong;
+            document.getElementById('summary-grade').textContent = `${pct}%`;
+            document.getElementById('summary-unanswered').textContent = unanswered > 0
+                ? `Masih ada ${unanswered} sub-soal yang belum dijawab.`
+                : `Semua ${quizData.length} sub-soal telah selesai dikerjakan!`;
+
+            const modal = document.getElementById('summary-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeSummaryModal() {
+            const modal = document.getElementById('summary-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Inisialisasi aplikasi saat halaman siap
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            renderQuestion();
+            updateStatsAndNav();
+        });
+    </script>
+</body>
+</html>
